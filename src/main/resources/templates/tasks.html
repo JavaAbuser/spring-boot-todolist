@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous">
+</head>
+<body style="background-color: whitesmoke">
+    <nav class="navbar navbar-light" style="background-color: #79B0FE;">
+        <a class="navbar-brand" href="" style="margin-left: 300px; font-weight: normal">#TODO list</a>
+            <span class="navbar-text float-right">
+    </span>
+        </div>
+    </nav>
+    <p style="margin-left: 500px; font-weight: bold; font-size: 20px; margin-top: 10px" th:text="${userName + ', ' + currentDate}"></p>
+<!--    <form th:method="GET" th:action="@{/tasks/search}" th:object="${localDate}" style="margin-left: 500px">-->
+<!--        <label for="calendar" style="font-size: 20px">Select to change day: </label>-->
+<!--        <input type="date" id="calendar" lang="en-US" th:field="*{dayOfWeek}"/>-->
+<!--        <input type="submit" value="Select" class="btn btn-primary btn-sm" style="margin-bottom: 4px">-->
+<!--    </form>-->
+<div class="d-flex flex-column" style="margin-top: 10px">
+<th:block th:each="task : ${tasks}">
+    <div class="list-group">
+        <label class="list-group-item d-flex gap-3 justify-content-left" style="margin-left: 500px; width: 600px">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" style="margin-top: 7%">
+                <label class="form-check-label" for="flexCheckDefault">
+                    <strong class="text-center" th:text="${task.getDescription()}" style="font-size: 20px"></strong>
+                    <th:block th:if="${task.getDurationAllDay()}">
+                        <small class="d-block text-muted">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
+                                <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+                                <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
+                            </svg>
+                            During all day
+                        </small>
+                    </th:block>
+                </label>
+            </div>
+                    <form th:method="DELETE" th:action="@{/tasks/{id}/delete(id = ${task.getId()})}">
+                        <input type="submit" value="Delete" class="btn btn-primary btn-sm"/>
+                    </form>
+            </span>
+        </label>
+    </div>
+</th:block>
+    <th:block th:if="${taskToBeAdded}">
+        <form th:method="POST" th:action="@{/tasks/add}" th:object="${taskToBeAdded}" style="margin-left: 500px; margin-top: 20px">
+            <label for="description">Enter your task description: </label>
+            <input type="text" id="description" th:field="*{description}"/>
+            <div class="form-check form-switch">
+                <label for="durationAllDay">During all day</label>
+                <input class="form-check-input" type="checkbox" id="durationAllDay" name="durationAllDay">
+            </div>
+            <label for="userId" th:type="hidden"></label>
+            <input type="text" th:object="${taskToBeAdded}" th:field="*{user}" class="form-control" th:type="hidden" id="userId"/>
+            <input type="submit" value="Add task" class="btn btn-primary btn-sm"/>
+        </form>
+    </th:block>
+    <th:block th:unless="${taskToBeAdded}">
+    <form th:method="GET" th:action="@{/tasks/add}" style="margin-left: 780px">
+        <input type="submit" value="Add" class="btn btn-primary" style="font-size: 15px; font-weight: normal; margin-top: 10px"/>
+    </form>
+    </th:block>
+</div>
+</body>
+</html>
